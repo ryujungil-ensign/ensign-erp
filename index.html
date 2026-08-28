@@ -1889,7 +1889,7 @@ const Contracts = {
 /* =====================================================
    3) 세금계산서 — 더존식 그리드 (계약당 4행)
 ===================================================== */
-let invFilter    = { q:'', year:'', typeCode:'', onlyUnpaid:false, ctYear:'' };
+let invFilter    = { q:'', year:String(new Date().getFullYear()), typeCode:'', onlyUnpaid:false, ctYear:String(new Date().getFullYear()) };
 
 function _invHtml(){
   const cts = State.contracts.filter(c=>{
@@ -1978,7 +1978,6 @@ Views.invoices = function(){
   document.getElementById('content').innerHTML = `
     <div class="kpis" id="inv-kpis" style="grid-template-columns:repeat(5,minmax(150px,1fr))"></div>
     <div class="toolbar sticky-toolbar">
-      <input type="search" id="inv-search" placeholder="계약번호·계약명·업체명 검색" value="${esc(invFilter.q)}" oninput="searchInput(event,'inv')" style="width:200px">
       <select onchange="invFilter.ctYear=this.value;_renderInvoices()" title="계약 대상년도로 검색 (미발행 신규 계약 찾기용)">
         <option value="">계약년도 전체</option>
         ${[...new Set(State.contracts.map(c=>c.year).filter(Boolean))].sort().reverse().map(y=>`<option value="${y}" ${invFilter.ctYear===y?'selected':''}>${y}년 계약</option>`).join('')}
@@ -1991,6 +1990,7 @@ Views.invoices = function(){
         <option value="">사업본부 전체</option>
         ${Object.keys(TYPE_CODES).map(k=>`<option value="${k}" ${invFilter.typeCode===k?'selected':''}>${TYPE_CODES[k]}</option>`).join('')}
       </select>
+      <input type="search" id="inv-search" placeholder="계약번호·계약명·업체명 검색" value="${esc(invFilter.q)}" oninput="searchInput(event,'inv')" style="width:200px">
       <label style="font-size:13px;display:flex;align-items:center;gap:5px;cursor:pointer">
         <input type="checkbox" ${invFilter.onlyUnpaid?'checked':''} onchange="invFilter.onlyUnpaid=this.checked;_renderInvoices()"> 미수금만 보기
       </label>
