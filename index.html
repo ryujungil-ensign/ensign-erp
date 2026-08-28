@@ -5253,8 +5253,16 @@ Views.equip = function(){
     <div class="toolbar sticky-toolbar">
       <button class="btn ${equipTab==='list'?'pri':''}" onclick="equipTab='list';Views.equip()">📋 장비목록</button>
       <button class="btn ${equipTab==='byPerson'?'pri':''}" onclick="equipTab='byPerson';Views.equip()">👤 개인별 보유현황</button>
+      ${equipTab==='list' ? `
+      <input type="search" id="equip-search" placeholder="장비명·장비번호·SN 검색"
+        value="${esc(equipFilter.q)}" oninput="equipSearchInput(event)" style="width:240px">` : ''}
       <span class="sp"></span>
-      <div id="equip-toolbar-extra" style="display:flex;gap:8px;align-items:center"></div>
+      <span id="equip-summary" style="font-size:12.5px;color:var(--ink2)"></span>
+      ${equipTab==='list' ? `
+      <button class="btn" onclick="Equip.template()">업로드 양식</button>
+      <label class="btn">엑셀 일괄등록<input type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="Equip.importXlsx(this)"></label>
+      <button class="btn" onclick="Equip.exportXlsx()">엑셀 내보내기</button>
+      <button class="btn pri" onclick="Equip.edit()">+ 장비 등록</button>` : ''}
     </div>
     <div id="equip-list" style="margin-top:4px"></div>`;
   if(equipTab==='list') _renderEquip();
@@ -5276,17 +5284,6 @@ function _equipRows(){
 }
 
 function _renderEquip(){
-  const extra = document.getElementById('equip-toolbar-extra');
-  if(extra){
-    extra.innerHTML = `
-      <input type="search" id="equip-search" placeholder="장비명·장비번호·SN 검색"
-        value="${esc(equipFilter.q)}" oninput="equipSearchInput(event)" style="width:240px">
-      <span id="equip-summary" style="font-size:12.5px;color:var(--ink2)"></span>
-      <button class="btn" onclick="Equip.template()">업로드 양식</button>
-      <label class="btn">엑셀 일괄등록<input type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="Equip.importXlsx(this)"></label>
-      <button class="btn" onclick="Equip.exportXlsx()">엑셀 내보내기</button>
-      <button class="btn pri" onclick="Equip.edit()">+ 장비 등록</button>`;
-  }
   const list = _equipRows();
   const sm = document.getElementById('equip-summary');
   if(sm) sm.textContent = `장비 ${list.length}건`;
