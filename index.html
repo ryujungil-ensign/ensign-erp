@@ -1510,7 +1510,7 @@ Views.dashg = function(){
 /* =====================================================
    2) 계약관리
 ===================================================== */
-let ctFilter = { q:'', year:'', type:'' };
+let ctFilter = { q:'', year:String(new Date().getFullYear()), type:'' };
 
 function _ctRows(){
   const list = State.contracts.filter(c=>{
@@ -4291,7 +4291,7 @@ const Auth = {
    - 인사관리 재직자 목록에서 선택
    State.ediag = [{id, contractId, leader:{hrId,name}, members:[{hrId,name}], startDate, endDate, memo}]
 ===================================================== */
-let ediagFilter = { q:'', year:'', typeCode:'' };
+let ediagFilter = { q:'', year:String(new Date().getFullYear()), typeCode:'' };
 
 Views.ediag = function(){
   const years = [...new Set(State.contracts.map(c=>c.year).filter(Boolean))].sort().reverse();
@@ -4299,13 +4299,13 @@ Views.ediag = function(){
     <div class="toolbar sticky-toolbar">
       <input type="search" id="ediag-search" placeholder="계약번호·계약명·업체명 검색"
         value="${esc(ediagFilter.q)}" oninput="ediagSearchInput(event)" style="width:240px">
-      <select onchange="ediagFilter.typeCode=this.value;_renderEdiag()" style="border:1px solid var(--line);border-radius:7px;padding:7px 10px;background:#fff;font-size:13px">
-        <option value="">전체 사업본부</option>
-        ${Object.entries(TYPE_CODES).map(([k,v])=>`<option value="${k}" ${ediagFilter.typeCode===k?'selected':''}>${v}</option>`).join('')}
-      </select>
       <select onchange="ediagFilter.year=this.value;_renderEdiag()">
         <option value="">대상년도 전체</option>
         ${years.map(y=>`<option ${ediagFilter.year===y?'selected':''}>${y}</option>`).join('')}
+      </select>
+      <select onchange="ediagFilter.typeCode=this.value;_renderEdiag()" style="border:1px solid var(--line);border-radius:7px;padding:7px 10px;background:#fff;font-size:13px">
+        <option value="">전체 사업본부</option>
+        ${Object.entries(TYPE_CODES).map(([k,v])=>`<option value="${k}" ${ediagFilter.typeCode===k?'selected':''}>${v}</option>`).join('')}
       </select>
       <span class="sp"></span>
       <span id="ediag-summary" style="font-size:12.5px;color:var(--ink2)"></span>
@@ -4716,7 +4716,7 @@ Object.assign(Ediag, {
 /* =====================================================
    업무일정등록 — 사업본부별 업무일정 등록 + 팀장 메일 발송
 ===================================================== */
-let ediagMailFilter = { q:'', year:'', typeCode:'' };
+let ediagMailFilter = { q:'', year:String(new Date().getFullYear()), typeCode:'' };
 function ediagMailSearchInput(e){
   if(_ime['ediagmail']) return;
   ediagMailFilter.q = e.target.value;
@@ -4794,14 +4794,14 @@ Views.ediagmail = function(q){
         value="${esc(ediagMailFilter.q)}"
         oninput="ediagMailSearchInput(event)"
         style="width:220px">
-      <select onchange="ediagMailFilter.typeCode=this.value;Views.ediagmail()" style="border:1px solid var(--line);border-radius:7px;padding:7px 10px;background:#fff;font-size:13px">
-        <option value="">전체 사업본부</option>
-        ${Object.entries(TYPE_CODES).map(([k,v])=>`<option value="${k}" ${ediagMailFilter.typeCode===k?'selected':''}>${v}</option>`).join('')}
-      </select>
       <select onchange="ediagMailFilter.year=this.value;Views.ediagmail()" style="border:1px solid var(--line);border-radius:7px;padding:7px 10px;background:#fff;font-size:13px">
         <option value="">대상년도 전체</option>
         ${[...new Set(allContracts.map(c=>c.year||'').filter(Boolean))].sort().reverse()
           .map(y=>`<option value="${y}" ${ediagMailFilter.year===y?'selected':''}>${y}년</option>`).join('')}
+      </select>
+      <select onchange="ediagMailFilter.typeCode=this.value;Views.ediagmail()" style="border:1px solid var(--line);border-radius:7px;padding:7px 10px;background:#fff;font-size:13px">
+        <option value="">전체 사업본부</option>
+        ${Object.entries(TYPE_CODES).map(([k,v])=>`<option value="${k}" ${ediagMailFilter.typeCode===k?'selected':''}>${v}</option>`).join('')}
       </select>
       <span class="sp"></span>
       <span id="ediagmail-count" style="font-size:13px;color:var(--ink2)">${ediagContracts.length} / ${allContracts.length}건</span>
