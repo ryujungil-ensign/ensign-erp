@@ -1589,7 +1589,6 @@ Views.contracts = function(){
   document.getElementById('content').innerHTML = `
     <div class="kpis" id="ct-kpis" style="grid-template-columns:repeat(3,minmax(160px,1fr))"></div>
     <div class="toolbar sticky-toolbar">
-      <input type="search" id="ct-search" placeholder="계약번호·계약명·업체명 검색" value="${esc(ctFilter.q)}" oninput="searchInput(event,'ct')" style="width:240px">
       <select onchange="ctFilter.year=this.value;_renderContracts()">
         <option value="">대상년도 전체</option>
         ${years.map(y=>`<option ${ctFilter.year===y?'selected':''}>${y}</option>`).join('')}
@@ -1598,6 +1597,7 @@ Views.contracts = function(){
         <option value="">사업본부 전체</option>
         ${Object.keys(TYPE_CODES).map(k=>`<option value="${k}" ${ctFilter.type===k?'selected':''}>${TYPE_CODES[k]}</option>`).join('')}
       </select>
+      <input type="search" id="ct-search" placeholder="계약번호·계약명·업체명 검색" value="${esc(ctFilter.q)}" oninput="searchInput(event,'ct')" style="width:240px">
       <span class="sp"></span>
       <span id="ct-summary" style="font-size:12.5px;color:var(--ink2);white-space:nowrap"></span>
       <button class="btn" onclick="Contracts.template()">업로드 양식</button>
@@ -4297,8 +4297,6 @@ Views.ediag = function(){
   const years = [...new Set(State.contracts.map(c=>c.year).filter(Boolean))].sort().reverse();
   document.getElementById('content').innerHTML = `
     <div class="toolbar sticky-toolbar">
-      <input type="search" id="ediag-search" placeholder="계약번호·계약명·업체명 검색"
-        value="${esc(ediagFilter.q)}" oninput="ediagSearchInput(event)" style="width:240px">
       <select onchange="ediagFilter.year=this.value;_renderEdiag()">
         <option value="">대상년도 전체</option>
         ${years.map(y=>`<option ${ediagFilter.year===y?'selected':''}>${y}</option>`).join('')}
@@ -4307,6 +4305,8 @@ Views.ediag = function(){
         <option value="">전체 사업본부</option>
         ${Object.entries(TYPE_CODES).map(([k,v])=>`<option value="${k}" ${ediagFilter.typeCode===k?'selected':''}>${v}</option>`).join('')}
       </select>
+      <input type="search" id="ediag-search" placeholder="계약번호·계약명·업체명 검색"
+        value="${esc(ediagFilter.q)}" oninput="ediagSearchInput(event)" style="width:240px">
       <span class="sp"></span>
       <span id="ediag-summary" style="font-size:12.5px;color:var(--ink2)"></span>
     </div>
@@ -4790,10 +4790,6 @@ Views.ediagmail = function(q){
 
   document.getElementById('content').innerHTML = `
     <div class="toolbar sticky-toolbar">
-      <input type="search" id="ediagmail-search" placeholder="계약번호·업체명·계약명 검색"
-        value="${esc(ediagMailFilter.q)}"
-        oninput="ediagMailSearchInput(event)"
-        style="width:220px">
       <select onchange="ediagMailFilter.year=this.value;Views.ediagmail()" style="border:1px solid var(--line);border-radius:7px;padding:7px 10px;background:#fff;font-size:13px">
         <option value="">대상년도 전체</option>
         ${[...new Set(allContracts.map(c=>c.year||'').filter(Boolean))].sort().reverse()
@@ -4803,6 +4799,10 @@ Views.ediagmail = function(q){
         <option value="">전체 사업본부</option>
         ${Object.entries(TYPE_CODES).map(([k,v])=>`<option value="${k}" ${ediagMailFilter.typeCode===k?'selected':''}>${v}</option>`).join('')}
       </select>
+      <input type="search" id="ediagmail-search" placeholder="계약번호·업체명·계약명 검색"
+        value="${esc(ediagMailFilter.q)}"
+        oninput="ediagMailSearchInput(event)"
+        style="width:220px">
       <span class="sp"></span>
       <span id="ediagmail-count" style="font-size:13px;color:var(--ink2)">${ediagContracts.length} / ${allContracts.length}건</span>
       <button class="btn" onclick="EdiagMail.exportAllExcel()" style="background:#1565c0;color:#fff;border-color:#0d47a1">📥 전체 엑셀 다운로드</button>
